@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathfinder", "Pathfinder\Pathfinder.csproj", "{477D9CE3-4C9A-4482-985C-71B9F8FBD395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathfinder.Tests", "Pathfinder.Tests\Pathfinder.Tests.csproj", "{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{477D9CE3-4C9A-4482-985C-71B9F8FBD395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{477D9CE3-4C9A-4482-985C-71B9F8FBD395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{477D9CE3-4C9A-4482-985C-71B9F8FBD395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{477D9CE3-4C9A-4482-985C-71B9F8FBD395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
