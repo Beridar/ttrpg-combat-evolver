@@ -1,38 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Pathfinder
 {
     public interface IDamageCalculator
     {
-        int Calculate(IRandomDieRoll randomDieRoll);
+        int Calculate(PlayerCharacter playerCharacter, Monster monster);
     }
 
     public class DamageCalculator : IDamageCalculator
     {
-        private readonly PlayerCharacter _playerCharacter;
-        private readonly Monster _monster;
+        private readonly Func<IRandomDieRoll> _randomDieRoll;
 
-        public DamageCalculator(PlayerCharacter playerCharacter, Monster monster)
+        private struct Context
         {
-            _playerCharacter = playerCharacter;
-            _monster = monster;
+            public PlayerCharacter PlayerCharacter { get; set; }
+            public Monster Monster { get; set; }
+            public List<int> AttackRolls { get; set; }
+            public List<int> DamageRolls { get; set; }
         }
 
-        public int Calculate(IRandomDieRoll randomDieRoll)
+        public DamageCalculator(Func<IRandomDieRoll> randomDieRoll)
         {
-            var attackRoll = randomDieRoll.GetNextNumber(20);
-            var confirmation = randomDieRoll.GetNextNumber(20);
+            _randomDieRoll = randomDieRoll;
+        }
 
-            if (ThisAttackIsACrit(attackRoll, confirmation))
-                return CalculateDamageForACrit(randomDieRoll);
+        public int Calculate(PlayerCharacter playerCharacter, Monster monster)
+        {
+            var context = new Context
+            {
+                AttackRolls = new List<int>(),
+                DamageRolls = new List<int>(),
+                PlayerCharacter = playerCharacter,
+                Monster = monster,
+            };
 
-            if (ThisAttackIsAHit(attackRoll))
-                return CalculateDamageForAHit(randomDieRoll);
+            var attackRoll = _randomDieRoll().GetNextNumber(20);
+            var confirmation = _randomDieRoll().GetNextNumber(20);
+
+            context.AttackRolls.Add(attackRoll);
+            context.AttackRolls.Add(confirmation);
+
+            if (ThisAttackIsACrit(attackRoll, confirmation, context))
+                return CalculateDamageForACrit(context);
+
+            if (ThisAttackIsAHit(attackRoll, context))
+                return CalculateDamageForAHit(context);
 
             return 0;
         }
 
-        private bool ThisAttackIsAHit(int attackRoll)
+        private bool ThisAttackIsAHit(int attackRoll, Context context)
         {
             switch (attackRoll)
             {
@@ -41,49 +59,49 @@ namespace Pathfinder
                 case 20:
                     return true;
                 default:
-                    return _playerCharacter.AttackBonusAfterPowerAttack + attackRoll >= _monster.ArmorClass;
+                    return context.PlayerCharacter.AttackBonusAfterPowerAttack + attackRoll >= context.Monster.ArmorClass;
             }
         }
 
-        private int CalculateDamageForAHit(IRandomDieRoll randomDieRoll)
+        private int CalculateDamageForAHit(Context context)
         {
-            return CalculateDamageThatMayCrit(randomDieRoll)
-                   + CalculateDamageThatWillNotCrit(randomDieRoll);
+            return CalculateDamageThatMayCrit(context)
+                   + CalculateDamageThatWillNotCrit(context);
         }
 
-        private int CalculateDamageThatMayCrit(IRandomDieRoll randomDieRoll)
+        private int CalculateDamageThatMayCrit(Context context)
         {
-            var damage = _playerCharacter.StaticDamageThatCanCritAfterPowerAttack;
+            var damage = context.PlayerCharacter.StaticDamageThatCanCritAfterPowerAttack;
 
-            for (var i = 0; i < _playerCharacter.RandomDamageDieCount; i++)
-                damage += randomDieRoll.GetNextNumber(_playerCharacter.RandomDamageDieSize);
+            for (var i = 0; i < context.PlayerCharacter.RandomDamageDieCount; i++)
+                damage += _randomDieRoll().GetNextNumber(context.PlayerCharacter.RandomDamageDieSize);
 
             return damage;
         }
 
-        private int CalculateDamageThatWillNotCrit(IRandomDieRoll randomDieRoll)
+        private int CalculateDamageThatWillNotCrit(Context context)
         {
-            var damage = _playerCharacter.StaticDamageThatWillNotCrit;
+            var damage = context.PlayerCharacter.StaticDamageThatWillNotCrit;
 
-            for (var i = 0; i < _playerCharacter.RandomDamageDieCountThatWillNotCrit; i++)
-                damage += randomDieRoll.GetNextNumber(_playerCharacter.RandomDamageDieSizeThatWillNotCrit);
+            for (var i = 0; i < context.PlayerCharacter.RandomDamageDieCountThatWillNotCrit; i++)
+                damage += _randomDieRoll().GetNextNumber(context.PlayerCharacter.RandomDamageDieSizeThatWillNotCrit);
 
             return damage;
         }
 
-        private bool ThisAttackIsACrit(int attackRoll, int possibleConfirmation)
+        private bool ThisAttackIsACrit(int attackRoll, int possibleConfirmation, Context context)
         {
-            return ThisAttackIsAHit(attackRoll)
-                   && attackRoll >= _playerCharacter.MinRollForThreat
-                   && ThisAttackIsAHit(possibleConfirmation);
+            return ThisAttackIsAHit(attackRoll, context)
+                   && attackRoll >= context.PlayerCharacter.MinRollForThreat
+                   && ThisAttackIsAHit(possibleConfirmation, context);
         }
 
-        private int CalculateDamageForACrit(IRandomDieRoll randomDieRoll)
+        private int CalculateDamageForACrit(Context context)
         {
-            var damage = CalculateDamageThatWillNotCrit(randomDieRoll);
+            var damage = CalculateDamageThatWillNotCrit(context);
 
-            for (var i = 0; i < _playerCharacter.CriticalMultiplier; i++)
-                damage += CalculateDamageThatMayCrit(randomDieRoll);
+            for (var i = 0; i < context.PlayerCharacter.CriticalMultiplier; i++)
+                damage += CalculateDamageThatMayCrit(context);
 
             return damage;
         }

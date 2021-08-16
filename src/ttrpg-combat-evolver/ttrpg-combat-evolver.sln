@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathfinder", "Pathfinder\Pa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pathfinder.Tests", "Pathfinder.Tests\Pathfinder.Tests.csproj", "{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyhedral.Neat", "Polyhedral.Neat\Polyhedral.Neat.csproj", "{9406ECE2-9EC6-407A-82A4-50E4030DE633}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69924B1D-6A7D-4293-9BEF-0A16C8E1CB4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9406ECE2-9EC6-407A-82A4-50E4030DE633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9406ECE2-9EC6-407A-82A4-50E4030DE633}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9406ECE2-9EC6-407A-82A4-50E4030DE633}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9406ECE2-9EC6-407A-82A4-50E4030DE633}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
